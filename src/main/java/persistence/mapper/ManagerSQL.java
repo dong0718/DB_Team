@@ -1,4 +1,4 @@
 package persistence.mapper;
 
-public class SampleSQL {
+public class ManagerSQL {
 }
