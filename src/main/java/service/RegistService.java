@@ -6,17 +6,18 @@ import persistence.DTO.CreatedsubjectDTO;
 import persistence.DTO.StudentDTO;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RegistService {
     private final RegistDAO registDAO;
     public RegistService(RegistDAO registDAO){this.registDAO=registDAO;}
 
-    public String check_student(String id,String password){
+    public String check_student(String id,String password){//로그인체크함수
         String count=registDAO.check_student_dao(id,password);
         return count;
     }
-    public void regist(String id,String password){
+    public void regist(String id,String password){//수강신청 메소드
         String check=check_student(id,password);
         if(check.equals("0")){
             System.out.println("id또는 비밀번호가 틀렸습니다");
@@ -51,8 +52,8 @@ public class RegistService {
             List<AppliedregistDTO> studentapplylist= registDAO.get_same_with_stunum(stunum);//현재학생 수강 리스트
             LocalTime cursubstarttime=getsubject.getClassstarttime();//현재선택과목 시간
             for (AppliedregistDTO one:studentapplylist) {
-                String onesubname=one.getFcreatedsubcode();
-                CreatedsubjectDTO onesubject= registDAO.get_one_by_created_code(onesubname);
+                String onesubcode=one.getFcreatedsubcode();
+                CreatedsubjectDTO onesubject= registDAO.get_one_by_created_code(onesubcode);
                 if(cursubstarttime==onesubject.getClassstarttime()){
                     flag=false;
                     break;
@@ -78,5 +79,33 @@ public class RegistService {
             System.out.println(inresult);
             return;
         }
+    }
+
+    public List<CreatedsubjectDTO>getmysubject(String id,String password){//현재학생 수강신청 정보 조회
+        List<CreatedsubjectDTO> stusubject=new ArrayList<>();//새로운 빈 리스트 생성
+        String check=check_student(id,password);
+        if(check.equals("0")){
+            System.out.println("id또는 비밀번호가 틀렸습니다");
+            return null;//null 들어있음
+        }
+        else{
+            System.out.println("--------------");
+            System.out.println("학생 로그인 성공");
+            System.out.println("--------------");
+            System.out.println("수강목록조회시작");
+            //자기객체 가져오기
+            StudentDTO getstudent=registDAO.get_student_by_id_password(id, password);//현재학생
+            //수강목록에서 자기학번과 같은행 추출
+            int stunum=getstudent.getStunum();//현재학생 학번
+            List<AppliedregistDTO> studentapplylist= registDAO.get_same_with_stunum(stunum);//현재학생 수강 리스트
+            //각행의 과목코드로 과목정보 가져오기
+            for (AppliedregistDTO one:studentapplylist) {//수강목록 1행은 학생학번,과목코드가짐 1행가져와 코드읽고 그 코드로 개설과목정보 가져옴
+                String onesubcode=one.getFcreatedsubcode();
+
+                CreatedsubjectDTO onesubject= registDAO.get_one_by_created_code(onesubcode);
+                        stusubject.add(onesubject);
+            }
+        }
+        return stusubject;//수강하고있는과목이 없으면 빈 리스트임
     }
 }

@@ -17,7 +17,7 @@ public interface AppliedregistMapper {
     })
     List<AppliedregistDTO> get_all_applylist();
 
-    @Select("SELECT * FROM APPLIEDREGIST")
+    @Select("SELECT * FROM APPLIEDREGIST WHERE STU_NUM=#{stunumber}")
     @ResultMap("AppliedResultSet")
     List<AppliedregistDTO> get_stu_applylist(int stunumber);
 

@@ -1,8 +1,10 @@
 import persistence.DAO.RegistDAO;
+import persistence.DTO.CreatedsubjectDTO;
 import persistence.MybatisConnectionFactory;
 import service.RegistService;
 import view.RegistView;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -47,16 +49,23 @@ public class Main {
                 System.out.println("1.수강신청2.수강조회3.수강삭제");
                 System.out.println("교과목 수강신청학생목록조회");
                 int fourthmenu=sc.nextInt();
+                String id="kumid"; String password="kumpass";
                 switch (fourthmenu)
                 {
                     case 1:
                         //학생아이디,비밀번호 입력가정
-                        String id="kumid"; String password="kumpass";
                         System.out.println("아이디로"+id+"입력됨");
                         System.out.println("비밀번호로"+password+"입력됨");
                         registService.regist(id,password);
                         System.out.println("신청서비스종료");
                         break;
+                    case 2:
+                        //학생아이디,비밀번호 입력가정
+                        System.out.println("아이디로"+id+"입력됨");
+                        System.out.println("비밀번호로"+password+"입력됨");
+                        List<CreatedsubjectDTO> r=registService.getmysubject(id,password);
+                        registView.print_stu_subject(r);
+                        System.out.println("조회서비스 종료");
                 }
                 break;
         }
