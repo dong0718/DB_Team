@@ -5,6 +5,7 @@ import persistence.DTO.AppliedregistDTO;
 import persistence.DTO.CreatedsubjectDTO;
 import persistence.DTO.StudentDTO;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +44,25 @@ public class RegistService {
             System.out.println("학생이 CS0016 선택했다고 가정");
             String selectsubject="CS0016";//현재 선택한 교과목 코드
             System.out.println("---------------------------");
+            //선택한 교과목 수강 신청 가능 기간인지 확인
+            CreatedsubjectDTO getsubject=registDAO.get_one_by_created_code(selectsubject);//현재선택과목
+            LocalDate applystartdate=getsubject.getApplystartdate();
+            LocalDate applyenddate=getsubject.getApplyenddate();
+            LocalDate nowdate=LocalDate.now();
+            if(nowdate.isAfter(applystartdate)&& nowdate.isBefore(applyenddate))
+            {
+                System.out.println("------------------");
+                System.out.println("수강신청 가능 날짜");
+                System.out.println("-------------------");
+            }
+            else
+            {
+                System.out.println("현재 수강신청 불가 날짜입니다 수강신청 가능일"+applystartdate+"부터"+applyenddate);
+                return;
+            }
             //선택한 교과목 시작시간이 현재 시간표시작시간과 겹치는게 있는지 확인
             boolean flag=true;
-            CreatedsubjectDTO getsubject=registDAO.get_one_by_created_code(selectsubject);//현재선택과목
+            //CreatedsubjectDTO getsubject=registDAO.get_one_by_created_code(selectsubject);//현재선택과목
             StudentDTO getstudent=registDAO.get_student_by_id_password(id, password);//현재학생
 
             int stunum=getstudent.getStunum();//현재학생 학번
