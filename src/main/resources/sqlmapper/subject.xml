@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.SubjectMapper">
+    <resultMap id="result" type="persistence.DTO.SubjectDTO">
+        <result property="subcode" column="sub_code"/>
+        <result property="subname" column="sub_name"/>
+        <result property="subinfo" column="sub_info"/>
+        <result property="subgrade" column="sub_grade"/>
+        <result property="fmanid" column="man_id"/>
+    </resultMap>
+
+
+    <select id="selectAll" resultMap="result">
+        SELECT * FROM subject
+    </select>
+
+
+    <select id="selectByGrade" parameterType="int" resultMap="result">
+        SELECT * FROM subject WHERE sub_grade = #{sub_grade}
+    </select>
+
+
+    <insert id="insertSubject">
+        INSERT INTO subject (sub_code, sub_name, sub_info, sub_grade, man_id) VALUES (#{subcode}, #{subname}, #{subinfo}, #{subgrade}, #{fmanid})
+    </insert>
+
+
+
+    <update id="updateSubname">
+        UPDATE subject
+        SET sub_name = #{subname}
+        WHERE sub_code = #{subcode}
+    </update>
+
+
+
+
+
+</mapper>
