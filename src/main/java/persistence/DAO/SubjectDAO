@@ -1,0 +1,68 @@
+package persistence.DAO;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import persistence.DTO.SubjectDTO;
+
+
+import java.util.List;
+
+public class SubjectDAO {
+    private static SqlSessionFactory sqlSessionFactory = null;
+    public SubjectDAO(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
+
+
+    //전체조회
+    public List<SubjectDTO> select_all() {
+        List<SubjectDTO> list = null;
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("mapper.SubjectMapper.selectAll");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    //학년별조회
+    public List<SubjectDTO> select_by_grade(int grade) {
+        List<SubjectDTO> list = null;
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("mapper.SubjectMapper.selectByGrade", grade);
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+
+    //교과목추가
+    public void insert_subject(SubjectDTO subjectDTO) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try{
+            session.insert("mapper.SubjectMapper.insertSubject", subjectDTO);
+        } finally {
+            session.commit();
+            session.close();
+        }
+
+    }
+
+
+    //교과목명 변경
+    public void update_subname(SubjectDTO subjectDTO) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            session.update("mapper.SubjectMapper.updateSubname", subjectDTO);
+            session.commit();
+        } finally {
+            session.commit();
+            session.close();
+        }
+    }
+
+
+}
